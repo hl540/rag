@@ -20,9 +20,6 @@ func New(client *api.Client, model string) embedding.Embedder {
 }
 
 func (e *Embedder) Embed(ctx context.Context, text string) ([]float32, error) {
-	if text == "" {
-		return nil, errors.New("empty text")
-	}
 	embed, err := e.client.Embed(ctx, &api.EmbedRequest{
 		Model: e.model,
 		Input: text,

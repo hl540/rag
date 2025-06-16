@@ -93,7 +93,7 @@ func TestVectorStoreSimilaritySearch(t *testing.T) {
 		log.Fatalf("qdrant 连接失败: %v", err)
 	}
 	ctx := context.Background()
-	search, err := vectorStore.SimilaritySearch(ctx, "test", "格力董事长董明珠和前秘书孟羽童一同现身", 5)
+	search, err := vectorStore.SimilaritySearch(ctx, "test", "直播带货", 5)
 	if err != nil {
 		log.Fatalf("vector 查询失败: %v", err)
 	}

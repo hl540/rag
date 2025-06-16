@@ -49,13 +49,6 @@ func (v *VectorStore) createCollection(ctx context.Context, name string) error {
 	})
 }
 
-func (v *VectorStore) AddDocument(ctx context.Context, name string, doc *vectorstore.Document) error {
-	if doc == nil {
-		return errors.New("empty document")
-	}
-	return v.AddDocuments(ctx, name, []*vectorstore.Document{doc})
-}
-
 func (v *VectorStore) AddDocuments(ctx context.Context, name string, docs []*vectorstore.Document) error {
 	if len(docs) == 0 {
 		return errors.New("empty documents")
@@ -119,7 +112,7 @@ func (v *VectorStore) SimilaritySearch(ctx context.Context, name string, query s
 			Metadata: make(map[string]any),
 		}
 		for key, value := range point.Payload {
-			doc.Metadata[key] = value
+			doc.Metadata[key] = value.GetStringValue()
 		}
 		docs = append(docs, doc)
 	}

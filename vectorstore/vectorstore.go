@@ -17,7 +17,6 @@ type Document struct {
 const ContentKey = "content"
 
 type VectorStore interface {
-	AddDocument(ctx context.Context, name string, doc *Document) error
 	AddDocuments(ctx context.Context, name string, docs []*Document) error
 	SimilaritySearch(ctx context.Context, name string, query string, topK int) ([]*SearchResult, error)
 }
