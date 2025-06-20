@@ -3,10 +3,9 @@ package test
 import (
 	"context"
 	"github.com/google/uuid"
-	ollama2 "github.com/hl540/rag/embedding/ollama"
-	"github.com/hl540/rag/llm/ollama"
+	"github.com/hl540/rag/embedding"
+	"github.com/hl540/rag/llm"
 	"github.com/hl540/rag/vectorstore"
-	"github.com/hl540/rag/vectorstore/qdrant"
 	"github.com/joho/godotenv"
 	"github.com/ollama/ollama/api"
 	"log"
@@ -18,7 +17,7 @@ func TestEmbedText(t *testing.T) {
 		log.Fatalf("加载 .env 失败: %v", err)
 	}
 
-	llm, err := ollama.New("http://127.0.0.1:11434", "snowflake-arctic-embed:33m")
+	llm, err := llm.New("http://127.0.0.1:11434", "snowflake-arctic-embed:33m")
 	if err != nil {
 		log.Fatalf("llm 客户端创建失败: %v", err)
 	}
@@ -36,10 +35,11 @@ func TestVectorStoreAddDocument(t *testing.T) {
 		log.Fatalf("ollama 连接失败: %v", err)
 	}
 
-	vectorStore, err := qdrant.New(
-		qdrant.WithHost("106.55.106.158"),
-		qdrant.WithPort(6334),
-		qdrant.WithEmbedder(ollama2.New(ollama, "snowflake-arctic-embed:33m")),
+	embedder := embedding.NewOllamaEmbedder(ollama, "snowflake-arctic-embed:33m")
+	vectorStore, err := vectorstore.NewQdrantStore(
+		vectorstore.WithHost("106.55.106.158"),
+		vectorstore.WithPort(6334),
+		vectorstore.WithEmbedder(embedder),
 	)
 	if err != nil {
 		log.Fatalf("qdrant 连接失败: %v", err)
@@ -84,10 +84,11 @@ func TestVectorStoreSimilaritySearch(t *testing.T) {
 		log.Fatalf("ollama 连接失败: %v", err)
 	}
 
-	vectorStore, err := qdrant.New(
-		qdrant.WithHost("106.55.106.158"),
-		qdrant.WithPort(6334),
-		qdrant.WithEmbedder(ollama2.New(ollama, "snowflake-arctic-embed:33m")),
+	embedder := embedding.NewOllamaEmbedder(ollama, "snowflake-arctic-embed:33m")
+	vectorStore, err := vectorstore.NewQdrantStore(
+		vectorstore.WithHost("106.55.106.158"),
+		vectorstore.WithPort(6334),
+		vectorstore.WithEmbedder(embedder),
 	)
 	if err != nil {
 		log.Fatalf("qdrant 连接失败: %v", err)

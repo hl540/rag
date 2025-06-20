@@ -2,7 +2,6 @@ package documentloader
 
 import (
 	"bufio"
-	"context"
 	"github.com/google/uuid"
 	"github.com/hl540/rag/textsplitter"
 	"github.com/hl540/rag/vectorstore"
@@ -20,7 +19,7 @@ func New(read io.Reader) DocumentLoader {
 	}
 }
 
-func (l *TextLoader) Load(ctx context.Context) ([]*vectorstore.Document, error) {
+func (l *TextLoader) Load() ([]*vectorstore.Document, error) {
 	docs := make([]*vectorstore.Document, 0)
 	scanner := bufio.NewScanner(l.r)
 	for scanner.Scan() {
@@ -43,7 +42,7 @@ func (l *TextLoader) Load(ctx context.Context) ([]*vectorstore.Document, error) 
 	return docs, nil
 }
 
-func (l *TextLoader) LoadSplit(ctx context.Context, splitter textsplitter.TextSplitter) ([]*vectorstore.Document, error) {
+func (l *TextLoader) LoadSplit(splitter textsplitter.TextSplitter) ([]*vectorstore.Document, error) {
 	all, err := io.ReadAll(l.r)
 	if err != nil {
 		return nil, err

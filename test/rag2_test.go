@@ -3,8 +3,8 @@ package test
 import (
 	"context"
 	"github.com/hl540/rag/documentloader"
-	"github.com/hl540/rag/embedding/ollama"
-	"github.com/hl540/rag/vectorstore/qdrant"
+	"github.com/hl540/rag/embedding"
+	"github.com/hl540/rag/vectorstore"
 	"github.com/ollama/ollama/api"
 	"log"
 	"os"
@@ -18,12 +18,12 @@ func TestEmbed(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	vectorStore, err := qdrant.New(
-		qdrant.WithHost("106.55.106.158"),
-		qdrant.WithPort(6334),
-		qdrant.WithEmbedder(ollama.New(llm, "quentinz/bge-base-zh-v1.5:latest")),
-	)
-	//vectorStore := memory.New(ollama.New(llm, "quentinz/bge-base-zh-v1.5:latest"))
+	//vectorStore, err := qdrant.New(
+	//	qdrant.WithHost("106.55.106.158"),
+	//	qdrant.WithPort(6334),
+	//	qdrant.WithEmbedder(ollama.New(llm, "quentinz/bge-base-zh-v1.5:latest")),
+	//)
+	vectorStore := vectorstore.NewMemoryStore(embedding.NewOllamaEmbedder(llm, "quentinz/bge-base-zh-v1.5:latest"))
 
 	file, err := os.Open("../szbf.txt")
 	if err != nil {
@@ -31,7 +31,7 @@ func TestEmbed(t *testing.T) {
 	}
 	loader := documentloader.New(file)
 	//docs, err := loader.LoadSplit(ctx, textsplitter.NewSentenceSplitter(500, 30, false))
-	docs, err := loader.Load(ctx)
+	docs, err := loader.Load()
 	if err != nil {
 		log.Fatalf("文件加载失败： %s", err.Error())
 	}

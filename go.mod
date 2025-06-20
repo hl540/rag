@@ -7,6 +7,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/ollama/ollama v0.7.1
 	github.com/qdrant/go-client v1.14.0
+	golang.org/x/sync v0.14.0
 	google.golang.org/grpc v1.72.1
 )
 
